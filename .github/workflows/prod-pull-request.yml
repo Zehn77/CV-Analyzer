@@ -1,0 +1,47 @@
+name: Prod pull request
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-pull-request:
+    name: Auto pull request to main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate PR Title
+        uses: actions/github-script@v7
+        id: generate-title
+        with:
+          script: |
+            const commitId = context.payload.head_commit.id.substring(0, 7);
+            return `🚀 Production Release - commit: ${commitId}`;
+          result-encoding: string
+
+      - name: Generate PR Body
+        uses: actions/github-script@v7
+        id: generate-pr-body
+        with:
+          script: |
+            return `### 📦 New Production Release
+            - **Author:** @${context.payload.head_commit.author.username}
+            - **Commit Message:** ${context.payload.head_commit.message}`;
+          result-encoding: string
+
+      - name: Create Pull Request
+        uses: vsoch/pull-request-action@1.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_BRANCH: "main"
+          PULL_REQUEST_FROM_BRANCH: "develop"
+          PULL_REQUEST_TITLE: ${{ steps.generate-title.outputs.result }}
+          PULL_REQUEST_BODY: ${{ steps.generate-pr-body.outputs.result }}
+          PULL_REQUEST_UPDATE: true
