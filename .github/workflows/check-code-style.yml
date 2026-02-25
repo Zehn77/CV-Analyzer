@@ -25,10 +25,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
-      - name: Enable Corepack and install pnpm
+      - name: Install pnpm globally
         run: |
-          corepack enable
-          corepack prepare pnpm@9.0.0 --activate
+          npm install -g pnpm@9.0.0
+          pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
