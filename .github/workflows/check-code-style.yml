@@ -2,9 +2,9 @@ name: Check code style and linting
 
 on:
   push:
-    branches: ["feature/**", "develop", "main"]
+    branches: ["feature/**", "develop"]
   pull_request:
-    branches: ["develop", "main"]
+    branches: ["develop"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
