@@ -2,7 +2,7 @@ name: Check code style and linting
 
 on:
   push:
-    branches: ["feature/setup-cicd", "develop", "main"]
+    branches: ["feature/**", "develop", "main"]
   pull_request:
     branches: ["develop", "main"]
 
@@ -16,24 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. Avval PNPM ni o'rnatamiz (Keshsiz, faqat executable o'zi)
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9.0.0
 
-      # 2. Keyin Node.js ni o'rnatamiz va endi pnpm keshini ishlatsak bo'ladi
       - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: "pnpm"
 
-      # 3. Kutubxonalarni o'rnatish
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 4. Tekshiruvlar
       - name: Check linting errors
         run: pnpm run lint
 
