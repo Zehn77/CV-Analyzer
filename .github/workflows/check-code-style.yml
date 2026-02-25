@@ -2,7 +2,7 @@ name: Check code style and linting
 
 on:
   push:
-    branches: ["develop", "main"]
+    branches: ["feature/setup-cicd", "develop", "main"]
   pull_request:
     branches: ["develop", "main"]
 
