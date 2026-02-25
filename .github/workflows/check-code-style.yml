@@ -1,0 +1,37 @@
+name: Check code style and linting
+
+on:
+  push:
+    branches: ["feature/**", "develop"]
+  pull_request:
+    branches: ["develop"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check linting errors
+        run: pnpm run lint
+
+      - name: Check code style
+        run: pnpm run format:check
