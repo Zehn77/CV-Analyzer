@@ -18,7 +18,7 @@ export default function LoginPage() {
     });
 
     if (res?.error) {
-      alert("Xatolik: Email yoki parol noto'g'ri!");
+      alert("Error: Incorrect email or password!");
     } else {
       router.push("/");
     }
