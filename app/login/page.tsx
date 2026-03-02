@@ -18,7 +18,7 @@ import { LogIn } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("test@example.com");
-  const [password, setPassword] = useState("test");
+  const [password, setPassword] = useState("Test123%4");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 

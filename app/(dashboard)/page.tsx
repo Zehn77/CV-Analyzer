@@ -1,3 +1,3 @@
-export default function Home() {
-  return "Welcome to CV Analyzer";
+export default function DashboardPage() {
+  return "Welcome to Dashboard Page";
 }
