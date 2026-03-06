@@ -1,8 +1,9 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Bell, ChevronLeft, Menu } from "lucide-react";
+import { Briefcase, ChevronLeft, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,21 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
-const navItems = [
-  { label: "Positions", href: "/positions", icon: Briefcase },
-  { label: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+const navItems: {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+  roles: string[];
+  badge?: number;
+}[] = [
+  {
+    label: "Positions",
+    href: "/positions",
+    icon: Briefcase,
+    roles: ["MANAGER"],
+  },
 ];
 
 function SidebarContent({
@@ -31,6 +42,11 @@ function SidebarContent({
   onCollapse?: () => void;
 }) {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const role = session?.user?.role;
+  const visibleNavItems = navItems.filter((item) =>
+    role ? item.roles.includes(role) : false,
+  );
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
@@ -69,39 +85,56 @@ function SidebarContent({
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="flex flex-col gap-1">
-          {navItems.map((item) => {
-            const isActive =
-              pathname === item.href || pathname.startsWith(item.href + "/");
-            return (
-              <li key={item.href} className="relative">
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    collapsed && "justify-center px-2",
-                    isActive
-                      ? "bg-sidebar-accent text-sidebar-primary"
-                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                  )}
-                >
-                  <item.icon className="size-.45 shrink-0" />
-                  {!collapsed && (
-                    <>
-                      <span className="flex-1">{item.label}</span>
-                      {item.badge && (
-                        <Badge className="h-5 min-w-5 justify-center rounded-full bg-primary text-primary-foreground text-[10px] px-1.5">
-                          {item.badge}
-                        </Badge>
+          {status === "loading"
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <li key={i}>
+                  <div
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5",
+                      collapsed && "justify-center px-2",
+                    )}
+                  >
+                    <div className="size-4 w-full shrink-0 rounded bg-sidebar-accent animate-pulse" />
+                    {!collapsed && (
+                      <div className="h-3.5 w-24 rounded bg-sidebar-accent animate-pulse" />
+                    )}
+                  </div>
+                </li>
+              ))
+            : visibleNavItems.map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
+                return (
+                  <li key={item.href} className="relative">
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                        collapsed && "justify-center px-2",
+                        isActive
+                          ? "bg-sidebar-accent text-sidebar-primary"
+                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                       )}
-                    </>
-                  )}
-                </Link>
-                {collapsed && item.badge && (
-                  <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary" />
-                )}
-              </li>
-            );
-          })}
+                    >
+                      <item.icon className="size-.45 shrink-0" />
+                      {!collapsed && (
+                        <>
+                          <span className="flex-1">{item.label}</span>
+                          {item.badge && (
+                            <Badge className="h-5 min-w-5 justify-center rounded-full bg-primary text-primary-foreground text-[10px] px-1.5">
+                              {item.badge}
+                            </Badge>
+                          )}
+                        </>
+                      )}
+                    </Link>
+                    {collapsed && item.badge && (
+                      <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary" />
+                    )}
+                  </li>
+                );
+              })}
         </ul>
       </nav>
 
@@ -113,18 +146,37 @@ function SidebarContent({
           )}
         >
           <Avatar className="size-9 shrink-0">
-            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-              SC
+            <AvatarFallback
+              className={cn(
+                "text-xs font-semibold",
+                status === "loading"
+                  ? "bg-sidebar-accent animate-pulse text-transparent"
+                  : "bg-primary/10 text-primary",
+              )}
+            >
+              {session?.user?.email?.slice(0, 2).toUpperCase() ?? ""}
             </AvatarFallback>
           </Avatar>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">Sarah Chen</p>
+              <p
+                className={cn(
+                  "text-sm font-medium truncate",
+                  status === "loading" &&
+                    "rounded bg-sidebar-accent animate-pulse text-transparent",
+                )}
+              >
+                {session?.user?.email ?? "\u00A0"}
+              </p>
               <Badge
                 variant="outline"
-                className="mt-0.5 text-[10px] px-1.5 py-0 h-4 capitalize"
+                className={cn(
+                  "mt-0.5 text-[10px] px-1.5 py-0 h-4 capitalize",
+                  status === "loading" &&
+                    "w-14 border-transparent bg-sidebar-accent animate-pulse text-transparent",
+                )}
               >
-                Manager
+                {role?.toLowerCase() ?? "\u00A0"}
               </Badge>
             </div>
           )}
