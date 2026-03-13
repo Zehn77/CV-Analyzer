@@ -22,9 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const ROLES = ["DEVELOPER", "MANAGER", "ADMIN"] as const;
-type Role = (typeof ROLES)[number];
+import { REGISTER_ROLES, type Role } from "@/constants/roles";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -114,7 +112,7 @@ export default function RegisterPage() {
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                   <SelectContent>
-                    {ROLES.map((r) => (
+                    {REGISTER_ROLES.map((r) => (
                       <SelectItem key={r} value={r}>
                         {r.charAt(0) + r.slice(1).toLowerCase()}
                       </SelectItem>

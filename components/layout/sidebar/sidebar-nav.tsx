@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Bell } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-
-export const navItems = [
-  { label: "Positions", href: "/positions", icon: Briefcase },
-  { label: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-];
+import { getNavItemsByRole } from "@/constants/nav-items";
 
 export function SidebarNav({ collapsed }: { collapsed: boolean }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const navItems = getNavItemsByRole(session?.user?.role ?? "");
 
   return (
     <nav className="flex-1 overflow-y-auto px-3 py-4">
