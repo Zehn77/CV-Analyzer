@@ -4,12 +4,39 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { getNavItemsByRole } from "@/constants/nav-items";
 
+function SidebarNavSkeleton({ collapsed }: { collapsed: boolean }) {
+  return (
+    <nav className="flex-1 overflow-y-auto px-3 py-4">
+      <ul className="flex flex-col gap-1">
+        {[1, 2, 3, 4].map((i) => (
+          <li key={i}>
+            <div
+              className={cn(
+                "flex items-center gap-3 rounded-xl px-3 py-1.5",
+                collapsed && "justify-center px-2",
+              )}
+            >
+              <Skeleton className="size-8 shrink-0 rounded-lg bg-sidebar-accent" />
+              {!collapsed && (
+                <Skeleton className="h-8 w-full rounded-lg bg-sidebar-accent" />
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 export function SidebarNav({ collapsed }: { collapsed: boolean }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") return <SidebarNavSkeleton collapsed={collapsed} />;
 
   const navItems = getNavItemsByRole(session?.user?.role ?? "");
 
