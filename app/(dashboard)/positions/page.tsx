@@ -1,13 +1,20 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { ManagerPositions } from "./components/manager-positions";
-import { UserPositions } from "./components/user-positions";
+import { ManagerPositions } from "./_components/manager-positions/manager-positions";
+import { UserPositions } from "./_components/user-positions";
 
-export default async function PositionsPage() {
+export type PositionsPageProps = {
+  searchParams: Promise<{ q?: string; status?: string }>;
+};
+
+export default async function PositionsPage({
+  searchParams,
+}: PositionsPageProps) {
   const session = await getServerSession(authOptions);
   const role = session?.user?.role;
 
-  if (role === "MANAGER") return <ManagerPositions />;
+  if (role === "MANAGER")
+    return <ManagerPositions searchParams={searchParams} />;
 
   return <UserPositions />;
 }
