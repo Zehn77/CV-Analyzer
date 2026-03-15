@@ -1,31 +1,19 @@
-import { getServerApiClient } from "@/lib/api";
+import { getClientApiClient, getServerApiClient } from "@/lib/api";
+import type {
+  CreatePositionData,
+  GetPositionsParams,
+  Position,
+  PositionsResponse,
+} from "./positions.types";
 
-export type Position = {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
-  pages: number;
-};
-
-export type PositionsResponse = {
-  positions: Position[];
-  pagination: Pagination;
-};
-
-export type GetPositionsParams = {
-  page?: number;
-  limit?: number;
-  q?: string;
-  status?: string;
-};
+export type {
+  CreatePositionData,
+  GetPositionsParams,
+  Pagination,
+  Position,
+  PositionQuestion,
+  PositionsResponse,
+} from "./positions.types";
 
 export async function getPositions(
   params: GetPositionsParams = {},
@@ -42,4 +30,22 @@ export async function getPositions(
     },
   });
   return data.data;
+}
+
+export async function generateQuestions(
+  token: string,
+  data: CreatePositionData,
+): Promise<string[]> {
+  const api = getClientApiClient(token);
+  const { data: res } = await api.post("/positions/generate-questions", data);
+  return res.data.questions;
+}
+
+export async function createPosition(
+  token: string,
+  data: CreatePositionData,
+): Promise<Position> {
+  const api = getClientApiClient(token);
+  const { data: res } = await api.post("/positions", data);
+  return res.data;
 }

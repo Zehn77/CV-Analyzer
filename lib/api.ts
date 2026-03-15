@@ -9,6 +9,16 @@ export const apiClient = axios.create({
   },
 });
 
+export function getClientApiClient(token: string) {
+  return axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export async function getServerApiClient() {
   const session = await getServerSession(authOptions);
 

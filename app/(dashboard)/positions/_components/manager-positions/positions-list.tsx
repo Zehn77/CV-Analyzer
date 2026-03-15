@@ -1,3 +1,4 @@
+import { PositionCard } from "@/components/positions/position-card";
 import { getPositions } from "@/services/positions";
 
 type Props = {
@@ -14,9 +15,11 @@ export async function PositionsList({ q, status }: Props) {
 
   return (
     <ul className="space-y-3">
-      {positions.map((position) => (
-        <li key={position.id}>{position.title}</li>
-      ))}
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {positions.map((position) => (
+          <PositionCard key={position.id} position={position} />
+        ))}
+      </div>
     </ul>
   );
 }

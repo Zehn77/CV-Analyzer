@@ -50,8 +50,8 @@ export function PositionsFilters() {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Statuses</SelectItem>
-          <SelectItem value="open">Open</SelectItem>
-          <SelectItem value="closed">Closed</SelectItem>
+          <SelectItem value="OPEN">Open</SelectItem>
+          <SelectItem value="CLOSED">Closed</SelectItem>
         </SelectContent>
       </Select>
     </div>
