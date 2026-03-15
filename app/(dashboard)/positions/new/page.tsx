@@ -79,6 +79,7 @@ export default function CreatePositionPage() {
         title,
         description: jd,
         questions: formattedQuestions,
+        assignedUserIds: selectedDevs,
       });
       toast.success("Position created successfully!", {
         description: "Developers will be notified.",

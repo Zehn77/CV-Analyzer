@@ -16,63 +16,26 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { getUsers } from "@/services/users";
+import type { User } from "@/services/users.types";
 import { Check, ChevronsUpDown, X } from "lucide-react";
-import { useState } from "react";
-
-export type Developer = {
-  id: string;
-  name: string;
-  avatar: string;
-  email: string;
-};
-
-export const developers: Developer[] = [
-  { id: "dev-1", name: "Alex Rivera", avatar: "AR", email: "alex@company.com" },
-  {
-    id: "dev-2",
-    name: "Jordan Park",
-    avatar: "JP",
-    email: "jordan@company.com",
-  },
-  {
-    id: "dev-3",
-    name: "Morgan Lee",
-    avatar: "ML",
-    email: "morgan@company.com",
-  },
-  {
-    id: "dev-4",
-    name: "Casey Quinn",
-    avatar: "CQ",
-    email: "casey@company.com",
-  },
-  {
-    id: "dev-5",
-    name: "Riley Thompson",
-    avatar: "RT",
-    email: "riley@company.com",
-  },
-  {
-    id: "dev-6",
-    name: "Taylor Kim",
-    avatar: "TK",
-    email: "taylor@company.com",
-  },
-  {
-    id: "dev-7",
-    name: "Jamie Nguyen",
-    avatar: "JN",
-    email: "jamie@company.com",
-  },
-];
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 type Props = {
   selectedDevs: string[];
-  onToggle: (devId: string) => void;
+  onToggle: (userId: string) => void;
 };
 
 export function AssignDevelopers({ selectedDevs, onToggle }: Props) {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (!session?.user.accessToken) return;
+    getUsers(session.user.accessToken).then(({ users }) => setUsers(users));
+  }, [session]);
 
   return (
     <div>
@@ -108,19 +71,19 @@ export function AssignDevelopers({ selectedDevs, onToggle }: Props) {
             <CommandList>
               <CommandEmpty>No developers found.</CommandEmpty>
               <CommandGroup>
-                {developers.map((dev) => (
-                  <CommandItem key={dev.id} onSelect={() => onToggle(dev.id)}>
+                {users.map((user) => (
+                  <CommandItem key={user.id} onSelect={() => onToggle(user.id)}>
                     <Check
                       className={cn(
                         "mr-2 size-4",
-                        selectedDevs.includes(dev.id)
+                        selectedDevs.includes(user.id)
                           ? "opacity-100"
                           : "opacity-0",
                       )}
                     />
-                    {dev.name}
+                    {user.name}
                     <span className="ml-auto text-xs text-muted-foreground">
-                      {dev.email}
+                      {user.email}
                     </span>
                   </CommandItem>
                 ))}
@@ -132,17 +95,17 @@ export function AssignDevelopers({ selectedDevs, onToggle }: Props) {
 
       {selectedDevs.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {selectedDevs.map((devId) => {
-            const dev = developers.find((d) => d.id === devId);
+          {selectedDevs.map((userId) => {
+            const user = users.find((u) => u.id === userId);
             return (
-              <Badge key={devId} variant="secondary" className="gap-1 pr-1">
-                {dev?.name}
+              <Badge key={userId} variant="secondary" className="gap-1 pr-1">
+                {user?.name}
                 <button
-                  onClick={() => onToggle(devId)}
+                  onClick={() => onToggle(userId)}
                   className="ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20"
                 >
                   <X className="size-3" />
-                  <span className="sr-only">Remove {dev?.name}</span>
+                  <span className="sr-only">Remove {user?.name}</span>
                 </button>
               </Badge>
             );

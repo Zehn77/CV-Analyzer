@@ -39,8 +39,7 @@ export function PositionCard({ position }: { position: Position }) {
         <div className="mt-3 flex items-center gap-3 flex-wrap">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
             <FileText className="size-3 shrink-0" />
-            {/* {position.submissionCount} */}
-            submissions
+            {position.assignedUsers.length} assigned
           </span>
           <span className="text-xs text-muted-foreground">
             {formatRelativeTime(position.createdAt)}

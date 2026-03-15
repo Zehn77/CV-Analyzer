@@ -24,3 +24,9 @@ export function getStatusColor(status: string): string {
       return "bg-zinc-100 text-zinc-600 border-zinc-200";
   }
 }
+
+export function getScoreBg(score: number): string {
+  if (score >= 85) return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  if (score >= 70) return "bg-amber-50 text-amber-700 border-amber-200";
+  return "bg-red-50 text-red-700 border-red-200";
+}

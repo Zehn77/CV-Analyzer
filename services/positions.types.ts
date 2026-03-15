@@ -1,10 +1,25 @@
+export type PositionUser = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+};
+
+export type PositionQuestion = {
+  question: string;
+  answer: string | null;
+};
+
 export type Position = {
   id: string;
   title: string;
   description: string;
+  questions: PositionQuestion[];
+  status: "OPEN" | "CLOSED";
   createdAt: string;
   updatedAt: string;
-  status: "OPEN" | "CLOSED";
+  createdBy: PositionUser;
+  assignedUsers: PositionUser[];
 };
 
 export type Pagination = {
@@ -26,13 +41,9 @@ export type GetPositionsParams = {
   status?: string;
 };
 
-export type PositionQuestion = {
-  question: string;
-  answer: string | null;
-};
-
 export type CreatePositionData = {
   title: string;
   description: string;
   questions?: PositionQuestion[];
+  assignedUserIds?: string[];
 };

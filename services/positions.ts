@@ -12,6 +12,7 @@ export type {
   Pagination,
   Position,
   PositionQuestion,
+  PositionUser,
   PositionsResponse,
 } from "./positions.types";
 
@@ -39,6 +40,12 @@ export async function generateQuestions(
   const api = getClientApiClient(token);
   const { data: res } = await api.post("/positions/generate-questions", data);
   return res.data.questions;
+}
+
+export async function getPosition(id: string): Promise<Position> {
+  const api = await getServerApiClient();
+  const { data } = await api.get(`/positions/${id}`);
+  return data.data;
 }
 
 export async function createPosition(
