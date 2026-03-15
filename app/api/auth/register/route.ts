@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-
-const STATUS_MESSAGES: Record<number, string> = {
-  400: "Invalid data provided",
-  403: "Admin registration is not allowed",
-  409: "An account with this email already exists",
-  422: "Invalid data provided",
-  429: "Too many attempts. Please try again later",
-  500: "Server error. Please try again later",
-};
+import { getRegisterErrorMessage } from "@/lib/api-error";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -23,11 +15,10 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     if (axios.isAxiosError(err)) {
       const status = err.response?.status ?? 500;
-      const message =
-        STATUS_MESSAGES[status] ??
-        "Something went wrong. Please try again later";
-
-      return NextResponse.json({ error: message }, { status });
+      return NextResponse.json(
+        { error: getRegisterErrorMessage(status) },
+        { status },
+      );
     }
 
     return NextResponse.json(

@@ -1,3 +1,9 @@
-export default function DashboardPage() {
-  return "Welcome to Dashboard Page";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+  const role = session?.user?.role ?? "";
+
+  return <p>Welcome {role}</p>;
 }
