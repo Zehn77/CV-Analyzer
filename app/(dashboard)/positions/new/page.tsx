@@ -25,11 +25,14 @@ export default function CreatePositionPage() {
   const [selectedDevs, setSelectedDevs] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
-  const isValidField = (value: string) => value.trim().length >= 3;
+  const isTitleValid = title.trim().length >= 3;
+  const isDescriptionValid = jd.trim().length >= 100;
 
   const handleGenerateQuestions = useCallback(async () => {
-    if (!isValidField(jd)) {
-      toast.error("Job description must be at least 3 characters");
+    if (!isDescriptionValid) {
+      toast.error(
+        "Job description must be at least 100 characters to generate AI questions.",
+      );
       return;
     }
     setLoadingQuestions(true);
@@ -45,7 +48,7 @@ export default function CreatePositionPage() {
     } finally {
       setLoadingQuestions(false);
     }
-  }, [title, jd, session]);
+  }, [title, jd, session, isDescriptionValid]);
 
   const handleAnswerChange = useCallback((index: number, answer: string) => {
     setQuestions(
@@ -61,12 +64,12 @@ export default function CreatePositionPage() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!isValidField(title)) {
+    if (!isTitleValid) {
       toast.error("Job title must be at least 3 characters");
       return;
     }
-    if (!isValidField(jd)) {
-      toast.error("Job description must be at least 3 characters");
+    if (!isDescriptionValid) {
+      toast.error("Job description must be at least 100 characters");
       return;
     }
     setSubmitting(true);
@@ -114,7 +117,7 @@ export default function CreatePositionPage() {
           onChange={setJd}
           onGenerate={handleGenerateQuestions}
           generating={loadingQuestions}
-          canGenerate={isValidField(jd)}
+          canGenerate={isDescriptionValid}
         />
 
         {(loadingQuestions || questions) && (
@@ -135,7 +138,7 @@ export default function CreatePositionPage() {
         <div className="flex justify-end pb-8">
           <Button
             onClick={handleSubmit}
-            disabled={submitting || !isValidField(title) || !isValidField(jd)}
+            disabled={submitting || !isTitleValid || !isDescriptionValid}
           >
             {submitting ? (
               <span className="flex items-center gap-2">
