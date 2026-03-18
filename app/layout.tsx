@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "@/components/SessionProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -32,8 +33,10 @@ export default function RootLayout({
         className={`${dmSans.variable} ${sora.variable} font-sans antialiased`}
       >
         <Providers>
-          {children}
-          <Toaster position="top-right" richColors closeButton />
+          <TooltipProvider>
+            {children}
+            <Toaster position="top-right" richColors closeButton />
+          </TooltipProvider>
         </Providers>
         <Analytics />
       </body>

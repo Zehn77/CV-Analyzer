@@ -14,6 +14,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 type Props = {
   params: Promise<{ id: string }>;
 };
@@ -123,14 +129,16 @@ export default async function PositionDetailPage({ params }: Props) {
                     </p>
                     <div className="flex -space-x-2">
                       {position.assignedUsers.map((user) => (
-                        <Avatar
-                          key={user.id}
-                          className="size-8 border-2 border-card"
-                        >
-                          <AvatarFallback className="text-[10px] font-semibold bg-primary/10 text-primary">
-                            {user.name.slice(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                        <Tooltip key={user.id}>
+                          <TooltipTrigger asChild>
+                            <Avatar className="size-8 border-2 border-card">
+                              <AvatarFallback className="text-[10px] font-semibold bg-primary/10 text-primary">
+                                {user.name.slice(0, 2).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                          </TooltipTrigger>
+                          <TooltipContent>{user.name}</TooltipContent>
+                        </Tooltip>
                       ))}
                     </div>
                   </div>
