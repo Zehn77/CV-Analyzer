@@ -36,7 +36,7 @@ export default async function PositionDetailPage({ params }: Props) {
         <div className="flex-1 min-w-0">
           {/* Header */}
           <div className="mb-6">
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-3">
               <h1
                 className="min-w-0 text-xl font-bold tracking-tight sm:text-2xl"
                 style={{ fontFamily: "var(--font-heading)" }}
