@@ -12,7 +12,7 @@ import { Position } from "@/services/positions.types";
 
 export function PositionCard({ position }: { position: Position }) {
   return (
-    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-md">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <h3
@@ -32,11 +32,11 @@ export function PositionCard({ position }: { position: Position }) {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 pb-3">
-        <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
+      <CardContent className="flex flex-1 flex-col pb-3">
+        <p className="mb-4 min-h-10 text-sm leading-relaxed text-muted-foreground line-clamp-2">
           {position.description}
         </p>
-        <div className="mt-3 flex items-center gap-3 flex-wrap">
+        <div className="mt-auto flex items-center gap-3 flex-wrap pt-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
             <FileText className="size-3 shrink-0" />
             {position.assignedUsers.length} assigned
@@ -47,7 +47,7 @@ export function PositionCard({ position }: { position: Position }) {
           <Button
             variant="ghost"
             size="sm"
-            className="ml-auto h-auto px-2 text-primary hover:text-primary"
+            className="ml-auto h-auto px-2 text-primary hover:bg-transparent hover:text-primary"
             asChild
           >
             <Link href={`/positions/${position.id}`}>

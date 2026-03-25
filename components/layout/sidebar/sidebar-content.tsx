@@ -18,8 +18,8 @@ export function SidebarContent({
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div
         className={cn(
-          "flex h-14 items-center gap-3 border-b border-sidebar-border shrink-0",
-          collapsed ? "justify-center px-2" : "px-4",
+          "flex h-14 items-center border-b border-sidebar-border shrink-0 transition-all duration-200",
+          collapsed ? "justify-center px-2 gap-0" : "px-4 gap-3",
         )}
       >
         <Link
@@ -28,25 +28,37 @@ export function SidebarContent({
         >
           C
         </Link>
-        {!collapsed && (
-          <Link
-            href="/"
-            className="text-base font-semibold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            CIP Platform
-          </Link>
-        )}
-        {onCollapse && !collapsed && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto size-7 text-sidebar-foreground/60 hover:text-sidebar-foreground"
-            onClick={onCollapse}
-          >
-            <ChevronLeft className="size-4" />
-          </Button>
-        )}
+        <Link
+          href="/"
+          className={cn(
+            "text-base font-semibold tracking-tight transition-all duration-200 overflow-hidden whitespace-nowrap",
+            collapsed
+              ? "w-0 opacity-0 invisible"
+              : "w-auto opacity-100 visible",
+          )}
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          CIP Platform
+        </Link>
+        <div
+          className={cn(
+            "ml-auto transition-all duration-200",
+            collapsed
+              ? "w-0 opacity-0 invisible"
+              : "w-auto opacity-100 visible",
+          )}
+        >
+          {onCollapse && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-7 text-sidebar-foreground/60 hover:text-sidebar-foreground"
+              onClick={onCollapse}
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+          )}
+        </div>
       </div>
 
       <SidebarNav collapsed={collapsed} />
