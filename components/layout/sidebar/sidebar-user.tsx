@@ -12,15 +12,20 @@ function SidebarUserSkeleton({ collapsed }: { collapsed: boolean }) {
   return (
     <>
       <Skeleton className="size-9 rounded-full shrink-0 bg-sidebar-accent" />
-      {!collapsed && (
-        <>
-          <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-            <Skeleton className="h-3.5 w-24 rounded bg-sidebar-accent" />
-            <Skeleton className="h-3 w-14 rounded bg-sidebar-accent" />
-          </div>
-          <Skeleton className="size-8 rounded-md shrink-0 bg-sidebar-accent" />
-        </>
-      )}
+      <div
+        className={cn(
+          "flex items-center flex-1 gap-1.5 transition-all duration-200 overflow-hidden",
+          collapsed
+            ? "max-w-0 opacity-0 invisible"
+            : "max-w-full opacity-100 visible",
+        )}
+      >
+        <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+          <Skeleton className="h-3.5 w-24 rounded bg-sidebar-accent" />
+          <Skeleton className="h-3 w-14 rounded bg-sidebar-accent" />
+        </div>
+        <Skeleton className="size-8 rounded-md shrink-0 bg-sidebar-accent" />
+      </div>
     </>
   );
 }
@@ -41,8 +46,8 @@ export function SidebarUser({ collapsed }: { collapsed: boolean }) {
     <div className="shrink-0 border-t border-sidebar-border p-3">
       <div
         className={cn(
-          "flex h-9 items-center gap-3",
-          collapsed && "justify-center",
+          "flex h-9 items-center transition-all duration-200",
+          collapsed ? "justify-center gap-0" : "gap-3",
         )}
       >
         {status === "loading" ? (
@@ -54,7 +59,14 @@ export function SidebarUser({ collapsed }: { collapsed: boolean }) {
                 {initials}
               </AvatarFallback>
             </Avatar>
-            {!collapsed && (
+            <div
+              className={cn(
+                "flex items-center flex-1 transition-all duration-200 overflow-hidden",
+                collapsed
+                  ? "max-w-0 opacity-0 invisible"
+                  : "max-w-full opacity-100 visible",
+              )}
+            >
               <div className="flex-1 min-w-0">
                 <p className="text-sm ml-0.5 font-medium truncate">{name}</p>
                 <Badge
@@ -64,8 +76,6 @@ export function SidebarUser({ collapsed }: { collapsed: boolean }) {
                   {role.toLowerCase()}
                 </Badge>
               </div>
-            )}
-            {!collapsed && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -75,7 +85,7 @@ export function SidebarUser({ collapsed }: { collapsed: boolean }) {
                 <LogOut className="size-4" />
                 <span className="sr-only">Logout</span>
               </Button>
-            )}
+            </div>
           </>
         )}
       </div>

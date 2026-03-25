@@ -39,7 +39,7 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "relative hidden lg:flex h-screen flex-col border-r border-sidebar-border transition-all duration-200 shrink-0",
+        "relative hidden lg:flex h-screen flex-col border-r border-sidebar-border transition-[width] duration-200 shrink-0",
         collapsed ? "w-17" : "w-65",
       )}
     >
